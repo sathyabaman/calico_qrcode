@@ -1,27 +1,7 @@
 <?php    
-/*
- * PHP QR Code encoder
- *
- * Exemplatory usage
- *
- * PHP QR Code is distributed under LGPL 3
- * Copyright (C) 2010 Dominik Dzienia <deltalab at poczta dot fm>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- */
+
 include_once('includes/Db.php');
+include_once('mpdf60/mpdf.php');
 
 $currentCTNid = $_GET['ctnid'];
 
@@ -30,6 +10,101 @@ $db = new Db();
 $packageDetails = $db -> getSingleProductDetails($currentCTNid);
 
     $_REQUEST['data'] = $packageDetails[0]['barcode'];
+
+
+if ($_POST['downloadPDF']) {
+    $mpdf = new mPDF();
+
+    $mpdf->Bookmark('Start of the document');
+
+    $mpdf->WriteHTML('<div>
+<img src="$PNG_WEB_DIR.basename($filename)"/><hr/>  
+
+
+ <table>
+                <colgroup>
+                    <col class="col1" />
+                    <col class="col2" />
+                </colgroup>
+                <tbody>
+
+                    <THEAD style="background: orange;">
+                        <tr>
+                            <td>Description</td>
+                            <td>Value</td>
+                        </tr>
+                    </THEAD>
+                    <tr>
+                        <td><label >CTN Number: </label></td>
+                        <td>$packageDetails[0]["ctn"]</td>
+                    </tr>
+                    <tr>
+                        <td><label >PI Number</label></td>
+                        <td>$packageDetails[0]["pi"] </td>
+                    </tr>
+
+                    <tr>
+                        <td><label >IM Number: </label></td>
+                        <td>$packageDetails[0]["im"] </td>
+                    </tr>
+                    <tr>
+                        <td><label >PO Number: </label></td>
+                        <td>$packageDetails[0]["po"] </td>
+                    </tr>
+
+                    <tr>
+                        <td><label >Color Code</label></td>
+                        <td>$packageDetails[0]["color"] </td>
+                    </tr>
+
+                    <tr>
+                        <td><label >Style ID: </label></td>
+                        <td>$packageDetails[0]["style"] </td>
+                    </tr>
+                    <tr>
+                        <td><label >Length</label></td>
+                        <td>$packageDetails[0]["length"] </td>
+                    </tr>
+
+                    <tr>
+                        <td><label >Quantity: </label></td>
+                        <td>$packageDetails[0]["qty"] </td>
+                    </tr>
+                    <tr>
+                        <td><label >Total</label></td>
+                        <td>$packageDetails[0]["total"] </td>
+                    </tr>
+
+                    <tr>
+                        <td><label >NETT </label></td>
+                        <td>$packageDetails[0]["nett"] </td>
+                    </tr>
+                    <tr>
+                        <td><label >Gross</label></td>
+                        <td>$packageDetails[0]["gross"] </td>
+                    </tr>
+            
+                    <tr>
+                        <td><label for="text">Barcode Data</label></td>
+                        <td>$packageDetails[0]["barcode"] </td>
+                    </tr>
+
+                
+                </tbody>
+
+               
+            </table>
+            </div>'
+
+
+            );
+
+    $mpdf->Output();
+
+
+
+}
+
 
     if (!$_SESSION["isloggedin"]) {
      //  header( "Location: login.php" );
@@ -104,16 +179,27 @@ $packageDetails = $db -> getSingleProductDetails($currentCTNid);
     // benchmark
     //QRtools::timeBenchmark();    
 
+
 ?>
 
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>QR code</title>
+
+  <script type='application/javascript'>
+
+  function printQRCode(){
+    window.print()
+
+  }
+
+  </script>
 </head>
 <body>
 
+<div>
 <img src="<?php echo $PNG_WEB_DIR.basename($filename); ?>"/><hr/>  
 
 
@@ -190,10 +276,12 @@ $packageDetails = $db -> getSingleProductDetails($currentCTNid);
 
                
             </table>
+            </div>
 
     <hr/>
-   <input type="submit" value="PRINT">
-   <input type="submit" value="DOWNLOAD"><hr/>
+   <input type="submit" onclick="printQRCode()" value="PRINT">
+   <form action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>" method="POST"> <input type="submit" name="downloadPDF" value="DOWNLOAD"></form>
+  <hr/>
 
 
 </body>
