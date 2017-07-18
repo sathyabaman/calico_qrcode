@@ -13,95 +13,25 @@ $packageDetails = $db -> getSingleProductDetails($currentCTNid);
 
 
 if ($_POST['downloadPDF']) {
+
+    $Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>';
+
+ 
     $mpdf = new mPDF();
-
-    $mpdf->Bookmark('Start of the document');
-
-    $mpdf->WriteHTML('<div>
-<img src="$PNG_WEB_DIR.basename($filename)"/><hr/>  
+    $mpdf = new mPDF('utf-8', 'A6-L');
 
 
- <table>
-                <colgroup>
-                    <col class="col1" />
-                    <col class="col2" />
-                </colgroup>
-                <tbody>
+    $mpdf->SetHTMLHeader('<div> <img src="images/Calico_logo.jpg" style="height:50px, width: 150px"/></div>'); 
+    // PDF footer content                      
+    $mpdf->SetHTMLFooter('<div> <a href="http://www.surplus.dev">www.surplus.dev</a> </div>'); 
 
-                    <THEAD style="background: orange;">
-                        <tr>
-                            <td>Description</td>
-                            <td>Value</td>
-                        </tr>
-                    </THEAD>
-                    <tr>
-                        <td><label >CTN Number: </label></td>
-                        <td>$packageDetails[0]["ctn"]</td>
-                    </tr>
-                    <tr>
-                        <td><label >PI Number</label></td>
-                        <td>$packageDetails[0]["pi"] </td>
-                    </tr>
+   //$mpdf->WriteHTML('<div> <img src="assets/img/pdf_header.png"/></div>' );
 
-                    <tr>
-                        <td><label >IM Number: </label></td>
-                        <td>$packageDetails[0]["im"] </td>
-                    </tr>
-                    <tr>
-                        <td><label >PO Number: </label></td>
-                        <td>$packageDetails[0]["po"] </td>
-                    </tr>
+    $mpdf->WriteHTML($Messageg);
+     
 
-                    <tr>
-                        <td><label >Color Code</label></td>
-                        <td>$packageDetails[0]["color"] </td>
-                    </tr>
-
-                    <tr>
-                        <td><label >Style ID: </label></td>
-                        <td>$packageDetails[0]["style"] </td>
-                    </tr>
-                    <tr>
-                        <td><label >Length</label></td>
-                        <td>$packageDetails[0]["length"] </td>
-                    </tr>
-
-                    <tr>
-                        <td><label >Quantity: </label></td>
-                        <td>$packageDetails[0]["qty"] </td>
-                    </tr>
-                    <tr>
-                        <td><label >Total</label></td>
-                        <td>$packageDetails[0]["total"] </td>
-                    </tr>
-
-                    <tr>
-                        <td><label >NETT </label></td>
-                        <td>$packageDetails[0]["nett"] </td>
-                    </tr>
-                    <tr>
-                        <td><label >Gross</label></td>
-                        <td>$packageDetails[0]["gross"] </td>
-                    </tr>
-            
-                    <tr>
-                        <td><label for="text">Barcode Data</label></td>
-                        <td>$packageDetails[0]["barcode"] </td>
-                    </tr>
-
-                
-                </tbody>
-
-               
-            </table>
-            </div>'
-
-
-            );
 
     $mpdf->Output();
-
-
 
 }
 
@@ -147,37 +77,8 @@ if ($_POST['downloadPDF']) {
         $filename = $PNG_TEMP_DIR.'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize).'.png';
         QRcode::png($_REQUEST['data'], $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
         
-    } else {    
-    
-        // //default data
-        // echo 'You can provide data in GET parameter: <a href="?data=like_that">like that</a><hr/>';    
-        // QRcode::png($packageDetails[0]['barcode'], $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
-        
-    }    
-        
-    //display generated file
-    
-    
-    // //config form
-    // echo '<form action="index.php" method="post">
-    //     Data:&nbsp;<input name="data" value="'.(isset($_REQUEST['data'])?htmlspecialchars($_REQUEST['data']):'PHP QR Code :)').'" />&nbsp;
-    //     ECC:&nbsp;<select name="level">
-    //         <option value="L"'.(($errorCorrectionLevel=='L')?' selected':'').'>L - smallest</option>
-    //         <option value="M"'.(($errorCorrectionLevel=='M')?' selected':'').'>M</option>
-    //         <option value="Q"'.(($errorCorrectionLevel=='Q')?' selected':'').'>Q</option>
-    //         <option value="H"'.(($errorCorrectionLevel=='H')?' selected':'').'>H - best</option>
-    //     </select>&nbsp;
-    //     Size:&nbsp;<select name="size">';
-        
-    // for($i=1;$i<=10;$i++)
-    //     echo '<option value="'.$i.'"'.(($matrixPointSize==$i)?' selected':'').'>'.$i.'</option>';
-
-           
-        
-
-        
-    // benchmark
-    //QRtools::timeBenchmark();    
+    }   
+ 
 
 
 ?>
@@ -188,6 +89,9 @@ if ($_POST['downloadPDF']) {
 <head>
     <title>QR code</title>
 
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    
   <script type='application/javascript'>
 
   function printQRCode(){
@@ -195,12 +99,26 @@ if ($_POST['downloadPDF']) {
 
   }
 
+  function printPDF(){
+        var urldata = document.getElementById("qrcode_image").src;
+        console.log("urldata : "+ urldata);
+        $.ajax({
+               url : "includes/createPDf.php",
+               type : "POST", 
+               data : { url: urldata, },
+               dataType: "json",
+               success : function (response) {
+                     data = toJson(response) 
+               },
+        });
+  }
+
   </script>
 </head>
 <body>
 
 <div>
-<img src="<?php echo $PNG_WEB_DIR.basename($filename); ?>"/><hr/>  
+<img id="qrcode_image" src="<?php echo $PNG_WEB_DIR.basename($filename); ?>"/><hr/>  
 
 
  <table>
@@ -280,7 +198,9 @@ if ($_POST['downloadPDF']) {
 
     <hr/>
    <input type="submit" onclick="printQRCode()" value="PRINT">
-   <form action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>" method="POST"> <input type="submit" name="downloadPDF" value="DOWNLOAD"></form>
+   <input type="submit" onclick="printPDF()" value="PRINT PDF">
+   <form action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>
+                &filename=<?php echo 'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize); ?>" method="POST"> <input type="submit" name="downloadPDF" value="DOWNLOAD"></form>
   <hr/>
 
 
