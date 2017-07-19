@@ -14,23 +14,87 @@ $packageDetails = $db -> getSingleProductDetails($currentCTNid);
 
 if ($_POST['downloadPDF']) {
 
-    $Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>';
+    $Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>
+
+                 <table>
+                    <colgroup>
+                        <col class="col1" />
+                        <col class="col2" />
+                    </colgroup>
+                    <tbody>
+
+                        <THEAD style="background: orange;">
+                            <tr>
+                                <td>Description</td>
+                                <td>Value</td>
+                            </tr>
+                        </THEAD>
+                        <tr>
+                            <td><label >CTN Number: </label></td>
+                            <td>'.$packageDetails[0]["ctn"].'</td>
+                        </tr>
+                    
+                     <tr>
+                            <td><label >PI Number</label></td>
+                            <td>'.$packageDetails[0]["pi"].'</td>
+                        </tr>
+
+                        <tr>
+                            <td><label >IM Number: </label></td>
+                            <td>'.$packageDetails[0]["im"].'</td>
+                        </tr>
+                        <tr>
+                            <td><label >PO Number: </label></td>
+                            <td>'.$packageDetails[0]["po"].'</td>
+                        </tr>
+
+                        <tr>
+                            <td><label >Color Code</label></td>
+                            <td>'.$packageDetails[0]["color"].'</td>
+                        </tr>
+
+                        <tr>
+                            <td><label >Style ID: </label></td>
+                            <td>'.$packageDetails[0]["style"].'</td>
+                        </tr>
+                        <tr>
+                            <td><label >Length</label></td>
+                            <td>'.$packageDetails[0]["length"].'</td>
+                        </tr>
+
+                        <tr>
+                            <td><label >Quantity: </label></td>
+                            <td>'.$packageDetails[0]["qty"].'</td>
+                        </tr>
+                        <tr>
+                            <td><label >Total</label></td>
+                            <td>'.$packageDetails[0]["total"].'</td>
+                        </tr>
+
+                        <tr>
+                            <td><label >NETT </label></td>
+                            <td>'.$packageDetails[0]["nett"].'</td>
+                        </tr>
+                        <tr>
+                            <td><label >Gross</label></td>
+                            <td>'.$packageDetails[0]["gross"].'</td>
+                        </tr>
+                
+                        <tr>
+                            <td><label for="text">QRcode Data</label></td>
+                            <td>'.$packageDetails[0]["barcode"].'</td>
+                        </tr>
+                    
+                    </tbody>
+                </table>
+    ';
 
  
     $mpdf = new mPDF();
     $mpdf = new mPDF('utf-8', 'A6-L');
-
-
     $mpdf->SetHTMLHeader('<div> <img src="images/Calico_logo.jpg" style="height:50px, width: 150px"/></div>'); 
-    // PDF footer content                      
     $mpdf->SetHTMLFooter('<div> <a href="http://www.surplus.dev">www.surplus.dev</a> </div>'); 
-
-   //$mpdf->WriteHTML('<div> <img src="assets/img/pdf_header.png"/></div>' );
-
     $mpdf->WriteHTML($Messageg);
-     
-
-
     $mpdf->Output();
 
 }
