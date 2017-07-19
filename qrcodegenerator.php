@@ -12,9 +12,7 @@ $packageDetails = $db -> getSingleProductDetails($currentCTNid);
     $_REQUEST['data'] = $packageDetails[0]['barcode'];
 
 
-if ($_POST['downloadPDF']) {
-
-    $Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>
+$Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>
 
                  <table>
                     <colgroup>
@@ -89,6 +87,11 @@ if ($_POST['downloadPDF']) {
                 </table>
     ';
 
+
+
+if ($_POST['downloadPDF']) {
+
+    
  
     $mpdf = new mPDF();
     $mpdf = new mPDF('utf-8', 'A6-L');
@@ -151,41 +154,37 @@ if ($_POST['downloadPDF']) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR code</title>
+    <title>surplus QR code</title>
 
+    <script src="includes/jquery.min.js"></script>
+      <script type='application/javascript'>
+              function printQRCode(){
+                    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+                    mywindow.document.write('<html><head><title>Surplus QRcode </title>');
+                    mywindow.document.write('</head><body >');
+                    mywindow.document.write('<h1>' + document.title  + '</h1>');
+                    console.log(document.getElementById("barcode_container").innerHTML);
+                    mywindow.document.write(document.getElementById("barcode_container").innerHTML);
+                    mywindow.document.write('</body></html>');
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    
-  <script type='application/javascript'>
+                    mywindow.document.close(); // necessary for IE >= 10
+                    mywindow.focus(); // necessary for IE >= 10*/
 
-  function printQRCode(){
-    window.print()
+                    setTimeout(function(){
+                            mywindow.print();
+                            mywindow.close();
+                        }, 1000);
 
-  }
-
-  function printPDF(){
-        var urldata = document.getElementById("qrcode_image").src;
-        console.log("urldata : "+ urldata);
-        $.ajax({
-               url : "includes/createPDf.php",
-               type : "POST", 
-               data : { url: urldata, },
-               dataType: "json",
-               success : function (response) {
-                     data = toJson(response) 
-               },
-        });
-  }
-
-  </script>
+                    return true;
+              }
+      </script>
 </head>
 <body>
 
-<div>
-<img id="qrcode_image" src="<?php echo $PNG_WEB_DIR.basename($filename); ?>"/><hr/>  
-
+<div id="barcode_container">
 
  <table>
+ <img id="qrcode_image" src="<?php echo 'http://localhost/phpqrcode/'.$PNG_WEB_DIR.basename($filename); ?>"/><hr/>  
                 <colgroup>
                     <col class="col1" />
                     <col class="col2" />
@@ -253,18 +252,16 @@ if ($_POST['downloadPDF']) {
                         <td><?php echo $packageDetails[0]['barcode']; ?></td>
                     </tr>
 
-                
                 </tbody>
-
                
             </table>
-            </div>
+    </div>
 
     <hr/>
    <input type="submit" onclick="printQRCode()" value="PRINT">
-   <input type="submit" onclick="printPDF()" value="PRINT PDF">
    <form action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>
-                &filename=<?php echo 'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize); ?>" method="POST"> <input type="submit" name="downloadPDF" value="DOWNLOAD"></form>
+                &filename=<?php echo 'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize); ?>" method="POST"> <input type="submit" name="downloadPDF" value="Print To PDF">
+                </form>
   <hr/>
 
 
