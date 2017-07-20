@@ -9,7 +9,9 @@ $currentCTNid = $_GET['ctnid'];
 $db = new Db();
 $packageDetails = $db -> getSingleProductDetails($currentCTNid);
 
-    $_REQUEST['data'] = $packageDetails[0]['barcode'];
+    $_REQUEST['data'] = $packageDetails[0]['barcode'].'#'.$packageDetails[0]["ctn"]
+                        .'#'.$packageDetails[0]["pi"].'#'.$packageDetails[0]["im"]
+                        .'#'.$packageDetails[0]["po"].'#'.$packageDetails[0]["color"];
 
 
 $Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>
