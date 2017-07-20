@@ -4,6 +4,14 @@ include('includes/Db.php');
 $db = new Db();
 $packageList = $db -> getAllPackageList();
 
+
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: login/index.php');
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -53,6 +61,9 @@ $packageList = $db -> getAllPackageList();
                 </tbody>
                
             </table>
+
+
+<a href="login/login/logout.php" class="btn btn-default btn-lg btn-block">Logout</a>
 
 </body>
 </html>

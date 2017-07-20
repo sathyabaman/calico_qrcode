@@ -173,7 +173,7 @@ if ($_POST['downloadPDF']) {
                     setTimeout(function(){
                             mywindow.print();
                             mywindow.close();
-                        }, 1000);
+                        }, 500);
 
                     return true;
               }
