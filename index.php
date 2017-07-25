@@ -17,10 +17,25 @@ if (!isset($_SESSION['username'])) {
 <!DOCTYPE html>
 <html>
 <head>
+<link href="login/css/bootstrap.css" rel="stylesheet" media="screen">
     <title>QR Code</title>
 </head>
 <body>
-<table>
+<div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Calico</a>
+    </div>
+    <a href="login/login/logout.php" class="btn btn-link pull-right" style=" padding-top: 10px; ">Logout</a>
+  </div>
+</nav>
+
+</div>
+<div class="container">
+
+
+<table class="table table-bordered table-hover">
                 <colgroup>
                     <col class="col1" />
                     <col class="col2" />
@@ -28,11 +43,11 @@ if (!isset($_SESSION['username'])) {
                 <tbody>
                     <THEAD style="background: orange;">
                         <tr>
-                            <td>Barcode #</td>
-                            <td>CTN #</td>
-                            <td>PI #</td>
-                            <td>PO #</td>
-                            <td>IM #</td>
+                            <td>Barcode </td>
+                            <td>CTN</td>
+                            <td>PI </td>
+                            <td>PO </td>
+                            <td>IM </td>
                             <td>Length</td>
                             <td>Details</td>
 
@@ -50,8 +65,8 @@ if (!isset($_SESSION['username'])) {
                         <td>
 
 
-                        <a href="qrcodegenerator.php?ctnid=<?php echo $package["ctn"]; ?>">
-                            <button type="button" style="background: orange;">click Here</button>
+                        <a href="qrcodegenerator.php?ctnid=<?php echo $package["ctn"]; ?>" style=" text-align: center; display: block; ">
+                            <button class="btn btn-warning" type="button" style="background: orange;">View</button>
                         </a>
 
                         </td>
@@ -59,11 +74,10 @@ if (!isset($_SESSION['username'])) {
                    
                 <?php endforeach;?>
                 </tbody>
-               
-            </table>
+ </table>
 
+</div>
 
-<a href="login/login/logout.php" class="btn btn-default btn-lg btn-block">Logout</a>
 
 </body>
 </html>

@@ -1,3 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="login/css/bootstrap.css" rel="stylesheet" media="screen">
+<script src="includes/jquery.min.js"></script>
+    <title>QR Code</title>
+    
+</head>
+<body>
+
+<div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/phpqrcode/index.php">Calico</a>
+    </div>
+    <a href="login/login/logout.php" class="btn btn-link pull-right" style=" padding-top: 10px; ">Logout</a>
+  </div>
+</nav>
+
+</div>
+
 <?php    
 
 include_once('includes/Db.php');
@@ -14,80 +36,57 @@ $packageDetails = $db -> getSingleProductDetails($currentCTNid);
                         .'#'.$packageDetails[0]["po"].'#'.$packageDetails[0]["color"];
 
 
-$Messageg = '<div> <img  style="float: right" src="temp/'.$_GET['filename'].'.png" /></div>
+$Messageg = '<div id="loadprintin">
 
-                 <table>
-                    <colgroup>
-                        <col class="col1" />
-                        <col class="col2" />
-                    </colgroup>
-                    <tbody>
+<style>
 
-                        <THEAD style="background: orange;">
-                            <tr>
-                                <td>Description</td>
-                                <td>Value</td>
-                            </tr>
-                        </THEAD>
-                        <tr>
-                            <td><label >CTN Number: </label></td>
-                            <td>'.$packageDetails[0]["ctn"].'</td>
-                        </tr>
-                    
-                     <tr>
-                            <td><label >PI Number</label></td>
-                            <td>'.$packageDetails[0]["pi"].'</td>
-                        </tr>
+table, td, th {
+    border: 1px solid black;
+    padding: 2px;
 
-                        <tr>
-                            <td><label >IM Number: </label></td>
-                            <td>'.$packageDetails[0]["im"].'</td>
-                        </tr>
-                        <tr>
-                            <td><label >PO Number: </label></td>
-                            <td>'.$packageDetails[0]["po"].'</td>
-                        </tr>
+}
+table
+{
+    width:100%;
+}
+hr{
+    margin:0;pi
+PI
+ctn
+pi
+}
 
-                        <tr>
-                            <td><label >Color Code</label></td>
-                            <td>'.$packageDetails[0]["color"].'</td>
-                        </tr>
 
-                        <tr>
-                            <td><label >Style ID: </label></td>
-                            <td>'.$packageDetails[0]["style"].'</td>
-                        </tr>
-                        <tr>
-                            <td><label >Length</label></td>
-                            <td>'.$packageDetails[0]["length"].'</td>
-                        </tr>
+</style>
 
-                        <tr>
-                            <td><label >Quantity: </label></td>
-                            <td>'.$packageDetails[0]["qty"].'</td>
-                        </tr>
-                        <tr>
-                            <td><label >Total</label></td>
-                            <td>'.$packageDetails[0]["total"].'</td>
-                        </tr>
+        
 
-                        <tr>
-                            <td><label >NETT </label></td>
-                            <td>'.$packageDetails[0]["nett"].'</td>
-                        </tr>
-                        <tr>
-                            <td><label >Gross</label></td>
-                            <td>'.$packageDetails[0]["gross"].'</td>
-                        </tr>
-                
-                        <tr>
-                            <td><label for="text">QRcode Data</label></td>
-                            <td>'.$packageDetails[0]["barcode"].'</td>
-                        </tr>
-                    
-                    </tbody>
-                </table>
-    ';
+                <table>
+  <tr>
+    <th><h3>Calico (PVT) LTD</h3></th>
+    <th>CTN</th>
+
+  </tr>
+  <tr>
+    <td>PI Number : '.$packageDetails[0]["ctn"].'
+                                    <hr/><br/> IM Number:'.$packageDetails[0]["pi"].'
+                                    <hr/><br/> PO Number: '.$packageDetails[0]["im"].'
+                                    <hr/><br/> Color Code: '.$packageDetails[0]["po"].'
+                                    <hr/><br/> Style ID: '.$packageDetails[0]["color"].'
+                                    <hr/><br/> Style ID: '.$packageDetails[0]["style"].'
+                                    <hr/><br/> Length: '.$packageDetails[0]["length"].'
+                                    <hr/><br/> Quantity: '.$packageDetails[0]["qty"].'
+                                    <hr/><br/> Total: '.$packageDetails[0]["total"].'
+                                    <hr/><br/> Nett: '.$packageDetails[0]["nett"].'
+                                    <hr/><br/> Gross: '.$packageDetails[0]["gross"].'
+                                    <hr/><br/> QRcode: '.$packageDetails[0]["barcode"].' </td>
+    <td><img src="temp/'.$_GET['filename'].'.png" /></td>
+
+  </tr>
+
+</table>
+    
+    </div>';
 
 
 
@@ -97,8 +96,8 @@ if ($_POST['downloadPDF']) {
  
     $mpdf = new mPDF();
     $mpdf = new mPDF('utf-8', 'A6-L');
-    $mpdf->SetHTMLHeader('<div> <img src="images/Calico_logo.jpg" style="height:50px, width: 150px"/></div>'); 
-    $mpdf->SetHTMLFooter('<div> <a href="http://www.surplus.dev">www.surplus.dev</a> </div>'); 
+
+    $mpdf->SetHTMLFooter('<div style="color: #cccccc; text-align:right; font-size:12px;"> Solution by : surplisdev.com </div>'); 
     $mpdf->WriteHTML($Messageg);
     $mpdf->Output();
 
@@ -106,9 +105,9 @@ if ($_POST['downloadPDF']) {
 
 
     if (!$_SESSION["isloggedin"]) {
-     //  header( "Location: login.php" );
+     //  header( "Location: login.php" );im
     }
-    echo "<h1>Surplus QR code</h1><hr/>";
+    echo "<h2></h1>";
     
     //set it to writable location, a place for temp generated PNG files
     $PNG_TEMP_DIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
@@ -152,21 +151,21 @@ if ($_POST['downloadPDF']) {
 
 ?>
 
+</body>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>surplus QR code</title>
+    <title> QR code</title>
 
     <script src="includes/jquery.min.js"></script>
       <script type='application/javascript'>
               function printQRCode(){
                     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
                     mywindow.document.write('<html><head><title>Surplus QRcode </title>');
+                    mywindow.document.write('<link href="login/css/bootstrap.css" rel="stylesheet" media="screen">');
                     mywindow.document.write('</head><body >');
-                    mywindow.document.write('<h1>' + document.title  + '</h1>');
-                    console.log(document.getElementById("barcode_container").innerHTML);
-                    mywindow.document.write(document.getElementById("barcode_container").innerHTML);
+                    mywindow.document.write(document.getElementById("loadprintin").innerHTML);
                     mywindow.document.write('</body></html>');
 
                     mywindow.document.close(); // necessary for IE >= 10
@@ -185,8 +184,11 @@ if ($_POST['downloadPDF']) {
 
 <div id="barcode_container">
 
- <table>
- <img id="qrcode_image" src="<?php echo 'http://localhost/phpqrcode/'.$PNG_WEB_DIR.basename($filename); ?>"/><hr/>  
+
+
+<div class="col-lg-8">
+ <table class="table table-bordered table-hover">
+ 
                 <colgroup>
                     <col class="col1" />
                     <col class="col2" />
@@ -257,15 +259,78 @@ if ($_POST['downloadPDF']) {
                 </tbody>
                
             </table>
+            </div>
+
+        <div class="col-lg-4"><img style=" display: block; margin: auto; " id="qrcode_image" src="<?php echo 'http://localhost/phpqrcode/'.$PNG_WEB_DIR.basename($filename); ?>"/>  
+        </div>
+
+
+
+
+
+
+        <div id="loadprintin">
+
+<style>
+
+table, td, th {
+    border: 1px solid black;
+    padding: 2px;
+
+
+}
+table
+{
+    width:100%;
+ 
+}
+hr{
+    margin:0;
+}
+
+
+</style>
+
+        
+
+                <table>
+  <tr>
+    <th><h3>Calico (PVT) LTD</h3></th>
+    <th>CTN</th>
+
+  </tr>
+  <tr>
+            <td>CTN Number : <?php echo $packageDetails[0]["ctn"]; ?>
+    <hr/><br/> PI Number:<?php echo $packageDetails[0]["pi"]; ?>
+    <hr/><br/> PO Number: <?php echo $packageDetails[0]["im"]; ?>
+    <hr/><br/> Color Code: <?php echo $packageDetails[0]["po"]; ?>
+    <hr/><br/> Style ID: <?php echo $packageDetails[0]["color"]; ?>
+    <hr/><br/> Length: <?php echo $packageDetails[0]["length"]; ?>
+    <hr/><br/> Nett: <?php echo $packageDetails[0]["nett"]; ?>
+    <hr/><br/> Gross: <?php echo $packageDetails[0]["gross"]; ?>
+    <hr/><br/> QRcode: <?php echo $packageDetails[0]["barcode"]; ?> </td>
+    <td><img style=" display: block; margin: auto; " id="qrcode_image" src="<?php echo 'http://localhost/phpqrcode/'.$PNG_WEB_DIR.basename($filename); ?>"/></td>
+
+  </tr>
+
+</table>
+    
     </div>
 
-    <hr/>
-   <input type="submit" onclick="printQRCode()" value="PRINT">
-   <form action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>
-                &filename=<?php echo 'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize); ?>" method="POST"> <input type="submit" name="downloadPDF" value="Print To PDF">
-                </form>
-  <hr/>
+</div>
 
+<div style=" display: block; margin: auto; text-align: center;">
+   <input class="btn btn-default" type="submit" onclick="printQRCode()" value="PRINT">
+   <form style=" display: inline-block; " action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>
+                &filename=<?php echo 'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize); ?>" method="POST"> <input type="submit" class="btn btn-default" name="downloadPDF" value="Print To PDF">
+    </form>
+ </div>
+
+
+<script type="text/javascript">
+                    document.getElementById("loadprintin").hidden=true;
+               
+                    </script>
 
 </body>
 </html>
