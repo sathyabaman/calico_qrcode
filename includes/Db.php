@@ -38,7 +38,29 @@ class Db {
 				return $results;
 	}
 
+	public function totalNoOfitems(){
 
+		$this->connect();		
+		$query = "SELECT * FROM productlist";
+				$stmt = $this->connection->prepare($query);
+				$result = $stmt->execute();
+				$results = $stmt->rowCount();
+				return $results;
+	}
+
+	public function paginationFetchData($limit, $offset){
+		$this->connect();
+		$query = "SELECT *FROM productlist ORDER BY ctn DESC LIMIT :limit OFFSET :offset";
+		// Prepare the paged query
+	    $stmt = $this->connection->prepare($query);
+
+	    // Bind the query params
+	    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+	    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+	    $result = $stmt->execute();
+	    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	    return $results;
+	}
 
 }
 
