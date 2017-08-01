@@ -14,7 +14,7 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="index.php">Calico</a>
     </div>
-    <a href="login/login/logout.php" class="btn btn-link pull-right" style=" padding-top: 10px; ">Logout</a>
+    
   </div>
 </nav>
 
@@ -22,28 +22,27 @@
 
 <?php    
 
-include_once('includes/Db.php');
+//include_once('includes/Db.php');
 include_once('mpdf60/mpdf.php');
 
-$currentCTNid = $_GET['ctnid'];
+$currentCTNid = $_GET['str'];
 
 
-$db = new Db();
-$packageDetails = $db -> getSingleProductDetails($currentCTNid);
+$ProductData = explode("@@",$currentCTNid);
+$packageDetails = explode("@@",$_GET['str']);
 
-    $_REQUEST['data'] = $packageDetails[0]['barcode'].'#'.$packageDetails[0]["ctn"]
-                        .'#'.$packageDetails[0]["pi"].'#'.$packageDetails[0]["im"]
-                        .'#'.$packageDetails[0]["po"].'#'.$packageDetails[0]["color"];
+//$db = new Db();
+//$packageDetails = $db -> getSingleProductDetails($currentCTNid);
+
+$_REQUEST['data'] = $currentCTNid;;
+
 
 
 $Messageg = '<div id="loadprintin">
-
 <style>
-
 table, td, th {
     border: 1px solid black;
     padding: 2px;
-
 }
 table
 {
@@ -55,48 +54,36 @@ PI
 ctn
 pi
 }
-
-
 </style>
-
         
-
                 <table>
   <tr>
     <th><h3>Calico (PVT) LTD</h3></th>
     <th>CTN</th>
-
   </tr>
   <tr>
-    <td>PI Number : '.$packageDetails[0]["ctn"].'
-                                    <hr/><br/> IM Number:'.$packageDetails[0]["pi"].'
-                                    <hr/><br/> PO Number: '.$packageDetails[0]["im"].'
-                                    <hr/><br/> Color Code: '.$packageDetails[0]["po"].'
-                                    <hr/><br/> Style ID: '.$packageDetails[0]["color"].'
-                                    <hr/><br/> Style ID: '.$packageDetails[0]["style"].'
-                                    <hr/><br/> Length: '.$packageDetails[0]["length"].'
-                                    <hr/><br/> Quantity: '.$packageDetails[0]["qty"].'
-                                    <hr/><br/> Total: '.$packageDetails[0]["total"].'
-                                    <hr/><br/> Nett: '.$packageDetails[0]["nett"].'
-                                    <hr/><br/> Gross: '.$packageDetails[0]["gross"].'
-                                    <hr/><br/> QRcode: '.$packageDetails[0]["barcode"].' </td>
+                                    <td>PI Number : '. $packageDetails[0].'
+                                    <hr/><br/> IM Number:'.$packageDetails[1].'
+                                    <hr/><br/> PO Number: '.$packageDetails[2].'
+                                    <hr/><br/> Color Code: '.$packageDetails[3].'
+                                    <hr/><br/> Style ID: '.$packageDetails[4].'
+                                    <hr/><br/> Style ID: '.$packageDetails[5].'
+                                    <hr/><br/> Length: '.$packageDetails[6].'
+                                    <hr/><br/> Quantity: '.$packageDetails[7].'
+                                    <hr/><br/> Total: '.$packageDetails[8].' </td>
     <td><img src="temp/'.$_GET['filename'].'.png" /></td>
-
   </tr>
-
 </table>
     
     </div>';
 
 
-
 if ($_POST['downloadPDF']) {
 
-    
- 
+   
     $mpdf = new mPDF();
     $mpdf = new mPDF('utf-8', 'A6-L');
-    $mpdf->SetHTMLFooter('<div style="color: #cccccc; text-align:right; font-size:12px;"> Solution by : surplusdev.com </div>'); 
+    $mpdf->SetHTMLFooter('<div style=" color: #000000; text-align:right; font-size:12px;"> Solution by : surplusdev.com </div>'); 
     $mpdf->WriteHTML($Messageg);
     $mpdf->Output();
 
@@ -165,7 +152,7 @@ if ($_POST['downloadPDF']) {
                     mywindow.document.write('<style> @page { size: auto;    margin: 0mm;  }</style>');
                     mywindow.document.write('</head><body >');
                     mywindow.document.write(document.getElementById("loadprintin").innerHTML);
-                    mywindow.document.write('<div style="color: #cccccc; text-align:right; font-size:12px;"> Solution by : surplusdev.com </div>');
+                    mywindow.document.write('<div style="text-align:right; font-size:12px;color:black !important;"> Solution by : surplusdev.com </div>');
                     mywindow.document.write('</body></html>');
 
                     mywindow.document.close(); // necessary for IE >= 10
@@ -202,60 +189,45 @@ if ($_POST['downloadPDF']) {
                         </tr>
                     </THEAD>
                     <tr>
-                        <td><label >CTN Number: </label></td>
-                        <td><?php echo $packageDetails[0]['ctn']; ?></td>
+                        <td><label >Vendor Number: </label></td>
+                        <td><?php echo $ProductData[0]; ?></td>
                     </tr>
                     <tr>
                         <td><label >PI Number</label></td>
-                        <td><?php echo $packageDetails[0]['pi']; ?></td>
+                        <td><?php echo $ProductData[1]; ?></td>
                     </tr>
 
                     <tr>
-                        <td><label >IM Number: </label></td>
-                        <td><?php echo $packageDetails[0]['im']; ?></td>
+                        <td><label >Invoice Number: </label></td>
+                        <td><?php echo $ProductData[2]; ?></td>
                     </tr>
                     <tr>
-                        <td><label >PO Number: </label></td>
-                        <td><?php echo $packageDetails[0]['po']; ?></td>
-                    </tr>
-
-                    <tr>
-                        <td><label >Color Code</label></td>
-                        <td><?php echo $packageDetails[0]['color']; ?></td>
+                        <td><label >Color: </label></td>
+                        <td><?php echo $ProductData[3]; ?></td>
                     </tr>
 
                     <tr>
-                        <td><label >Style ID: </label></td>
-                        <td><?php echo $packageDetails[0]['style']; ?></td>
+                        <td><label >Style Number: </label></td>
+                        <td><?php echo $ProductData[4]; ?></td>
                     </tr>
                     <tr>
-                        <td><label >Length</label></td>
-                        <td><?php echo $packageDetails[0]['length']; ?></td>
+                        <td><label >GT</label></td>
+                        <td><?php echo $ProductData[5]; ?></td>
                     </tr>
 
                     <tr>
                         <td><label >Quantity: </label></td>
-                        <td><?php echo $packageDetails[0]['qty']; ?></td>
-                    </tr>
-                    <tr>
-                        <td><label >Total</label></td>
-                        <td><?php echo $packageDetails[0]['total']; ?></td>
-                    </tr>
-
-                    <tr>
-                        <td><label >NETT </label></td>
-                        <td><?php echo $packageDetails[0]['nett']; ?></td>
-                    </tr>
-                    <tr>
-                        <td><label >Gross</label></td>
-                        <td><?php echo $packageDetails[0]['gross']; ?></td>
+                        <td><?php echo $ProductData[6]; ?></td>
                     </tr>
             
                     <tr>
-                        <td><label for="text">Barcode Data</label></td>
-                        <td><?php echo $packageDetails[0]['barcode']; ?></td>
+                        <td><label >NETT </label></td>
+                        <td><?php echo $ProductData[7]; ?></td>
                     </tr>
-
+                    <tr>
+                        <td><label >Gross</label></td>
+                        <td><?php echo $ProductData[8]; ?></td>
+                    </tr>
                 </tbody>
                
             </table>
@@ -270,7 +242,7 @@ if ($_POST['downloadPDF']) {
                 <style>
                 table, td, th {
                     border: 1px solid black;
-                    padding: 2px;
+                    padding: 1.5px;
                     }
                 table { width:100%;}
                 hr{ margin:0; }
@@ -279,20 +251,20 @@ if ($_POST['downloadPDF']) {
                         
                 <table>
                       <tr>
-                        <th style="width: 80%"><h3>Calico (PVT) LTD</h3></th>
-                        <th>CTN</th>
+                        <th style="width: 80%"><img style="display:inline;" src="images/calico.GIF" alt="calico" height="42" width="42"><h1 style="display:inline;position:relative;bottom:15px; left:5px">CALICO (PVT) LTD</h1></th>
+                        <th style="font-size:2em"><h2><?php echo $ProductData[0]; ?></h2></th>
 
                       </tr>
                       <tr>
-                            <td>CTN Number : <?php echo $packageDetails[0]["ctn"]; ?>
-                        <hr/><br/> PI Number:<?php echo $packageDetails[0]["pi"]; ?>
-                        <hr/><br/> PO Number: <?php echo $packageDetails[0]["im"]; ?>
-                        <hr/><br/> Color Code: <?php echo $packageDetails[0]["po"]; ?>
-                        <hr/><br/> Style ID: <?php echo $packageDetails[0]["color"]; ?>
-                        <hr/><br/> Length: <?php echo $packageDetails[0]["length"]; ?>
-                        <hr/><br/> Nett: <?php echo $packageDetails[0]["nett"]; ?>
-                        <hr/><br/> Gross: <?php echo $packageDetails[0]["gross"]; ?>
-                        <hr/><br/> QRcode: <?php echo $packageDetails[0]["barcode"]; ?> </td>
+                            <td><strong> Vendor Number : <?php echo $ProductData[1]; ?> </strong>
+                        <hr/><br/> <strong> PI Number:<?php echo $ProductData[2]; ?> </strong>
+                        <hr/><br/> <strong> Invoice Number: <?php echo $ProductData[3]; ?> </strong>
+                        <hr/><br/> <strong> Color : <?php echo $ProductData[4]; ?> </strong>
+                        <hr/><br/> <strong> Style Number: <?php echo $ProductData[5]; ?> </strong>
+                        <hr/><br/> <strong> GT: <?php echo $ProductData[6]; ?> </strong>
+                        <hr/><br/> <strong> Quantity: <?php echo $ProductData[7]; ?> </strong>
+                        <hr/><br/> <strong> Net : <?php echo $ProductData[8]; ?> </strong>
+                        <hr/><br/> <strong> Gross: <?php echo $ProductData[9]; ?> </strong> </td>
                         <td><img style=" display: block; margin: auto; " id="qrcode_image" src="<?php echo 'http://178.62.43.112/1phpqrcode/'.$PNG_WEB_DIR.basename($filename); ?>"/></td>
                       </tr>
                 </table>
@@ -302,9 +274,9 @@ if ($_POST['downloadPDF']) {
 
 <div style=" display: block; margin: auto; text-align: center;">
    <input class="btn btn-default" type="submit" onclick="printQRCode()" value="PRINT">
-   <form style=" display: inline-block; " action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>
+<!--    <form style=" display: inline-block; " action="qrcodegenerator.php?ctnid=<?php echo $currentCTNid; ?>
                 &filename=<?php echo 'test'.md5($_REQUEST['data'].'|'.$errorCorrectionLevel.'|'.$matrixPointSize); ?>" method="POST"> <input type="submit" class="btn btn-default" name="downloadPDF" value="Print To PDF">
-    </form>
+    </form> -->
  </div>
 
 
